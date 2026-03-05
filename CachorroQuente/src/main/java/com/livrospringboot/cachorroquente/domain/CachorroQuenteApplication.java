@@ -1,4 +1,4 @@
-package com.livrospringboot.cachorroquente;
+package com.livrospringboot.cachorroquente.domain;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
