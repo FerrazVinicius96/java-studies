@@ -1,18 +1,52 @@
 package application;
 
 import model.services.*;
+import java.util.InputMismatchException;
+import java.util.Locale;
+import java.util.Scanner;
 
 public class Program {
     public static void main(String[] args) {
 
-        double saleValue = 550.50;
+        Locale.setDefault(Locale.US);
+        Scanner sc = new Scanner(System.in);
+        boolean programOn = true;
 
-        // Injetamos a implementação de Dólar
-        PaymentProcessor pp = new PaymentProcessor(new DollarConverter());
+        while (programOn) {
+            try {
+                System.out.print("\nInsira o valor que deseja converter: ");
+                double saleValue = sc.nextDouble();
 
-        System.out.printf("Valor final: R$ %.2f%n", pp.processPayment(saleValue));
+                System.out.print("Opções:\n1- Dólar para Real\n2- Euro para Real\n0- Sair\nEscolha: ");
+                int opcaoConver = sc.nextInt();
 
-        // Veja a vantagem: se precisasse mudar para Euro, o serviço pp continua o mesmo
-        // basta injetar uma nova implementação.
+                if (opcaoConver == 0) {
+                    System.out.println("Programa encerrado.");
+                    programOn = false;
+                    break;
+                }
+
+                PaymentProcessor pp;
+                switch (opcaoConver) {
+                    case 1:
+                        pp = new PaymentProcessor(new DollarConverter());
+                        System.out.printf("Valor final: R$ %.2f%n", pp.processPayment(saleValue));
+                        break;
+                    case 2:
+                        pp = new PaymentProcessor(new EuroConverter());
+                        System.out.printf("Valor final: R$ %.2f%n", pp.processPayment(saleValue));
+                        break;
+                    default:
+                        System.out.println("Opção inválida.");
+                        break;
+                }
+
+            } catch (InputMismatchException e) {
+                System.out.println("Erro: Digite apenas números válidos.");
+                sc.nextLine();
+            }
+        }
+
+        sc.close();
     }
 }
